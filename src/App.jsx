@@ -5,10 +5,14 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import LoginPage from './screens/loginpage'
 import SignupPage from './screens/signuppage'
+import Navbar from './components/Navbar'
+import TutorialScreen from './screens/tutorialscreen'
+import AttemptQuiz from './screens/attemptQuiz'
+import HomeScreen from './screens/homescreen'
 
 function App() {
   return (
-    <SignupPage />
+    <HomeScreen />
   )
 }
 

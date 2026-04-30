@@ -1,0 +1,182 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  max-width: none;
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  background: #f7f7f4;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 195px;
+  min-width: 195px;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e1;
+  padding-top: 1.5rem;
+}
+
+.sidebar-header {
+  padding: 0 1.2rem 1.2rem;
+  border-bottom: 1px solid #e5e5e1;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.sidebar-subtitle {
+  font-size: 0.72rem;
+  color: #999;
+  margin-top: 2px;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.82rem;
+  font-family: Arial, sans-serif;
+  color: #555;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.sidebar-item:hover {
+  background: #f4f4f0;
+  color: #111;
+}
+
+.sidebar-item.active {
+  background: #eff6ff;
+  color: #2563eb;
+  border-left-color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebar-item-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.sidebar-item.active .sidebar-item-icon {
+  opacity: 1;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2.5rem 3rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111;
+  margin-bottom: 1.1rem;
+}
+
+.intro {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+.article-section {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.75rem;
+}
+
+.body-text {
+  font-size: 0.93rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 0.85rem;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-list li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #444;
+  font-family: Arial, sans-serif;
+}
+
+.feature-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #888;
+}
+
+.feature-list li strong {
+  font-weight: 700;
+  color: #111;
+}
+
+.quiz-start-btn {
+    background-color: #2563eb;
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border: none;
+    border-radius: 8px;
+}
