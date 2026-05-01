@@ -28,7 +28,6 @@ export default function Navbar({ activeLink = "Tutorials" }) {
       <ul className="navbar-links">
         {NAV_LINKS.map((link) => (
           <li key={link.name}>
-            {/* Replaced <a> with <Link> from react-router-dom */}
             <Link
               to={link.path}
               className={`navbar-link ${activeLink === link.name ? "active" : ""}`}
