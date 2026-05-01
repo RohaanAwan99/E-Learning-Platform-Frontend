@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 const BellIcon = () => (
@@ -14,7 +15,10 @@ const SettingsIcon = () => (
   </svg>
 );
 
-const NAV_LINKS = ["Home", "Tutorials", "Profile", "Help"];
+const NAV_LINKS = [
+  { name: "Home", path: "/" },
+  { name: "Tutorials", path: "/tutorial" },
+];
 
 export default function Navbar({ activeLink = "Tutorials" }) {
   return (
@@ -23,13 +27,14 @@ export default function Navbar({ activeLink = "Tutorials" }) {
 
       <ul className="navbar-links">
         {NAV_LINKS.map((link) => (
-          <li key={link}>
-            <a
-              href="#"
-              className={`navbar-link ${activeLink === link ? "active" : ""}`}
+          <li key={link.name}>
+            {/* Replaced <a> with <Link> from react-router-dom */}
+            <Link
+              to={link.path}
+              className={`navbar-link ${activeLink === link.name ? "active" : ""}`}
             >
-              {link}
-            </a>
+              {link.name}
+            </Link>
           </li>
         ))}
       </ul>

@@ -1,19 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import LoginPage from './screens/loginpage'
-import SignupPage from './screens/signuppage'
-import Navbar from './components/Navbar'
-import TutorialScreen from './screens/tutorialscreen'
-import AttemptQuiz from './screens/attemptQuiz'
-import HomeScreen from './screens/homescreen'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from './screens/loginpage';
+import SignupPage from './screens/signuppage';
+import Navbar from './components/Navbar';
+import TutorialScreen from './screens/tutorialscreen';
+import AttemptQuiz from './screens/attemptQuiz';
+import HomeScreen from './screens/homescreen';
+import TeacherCreateQuiz from "./screens/teachercreatequiz";
 
 function App() {
   return (
-    <HomeScreen />
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/teachercreatequiz" element={<TeacherCreateQuiz />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/tutorial" element={<TutorialScreen />} />
+        <Route path="/quiz" element={<AttemptQuiz />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

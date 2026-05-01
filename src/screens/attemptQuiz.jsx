@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './stylesheets/attemptQuiz.css';
+import { useNavigate } from 'react-router-dom';
 
 const quizData = [
   {
@@ -28,6 +29,7 @@ const AttemptQuiz = () => {
 
   const totalQuestions = 10;
   const currentQuestion = quizData[currentIndex];
+  const navigate = useNavigate();
 
   const handleOptionSelect = (option) => {
     setSelectedAnswers({
@@ -51,6 +53,7 @@ const AttemptQuiz = () => {
   const handleEndQuiz = () => {
     console.log("Quiz Ended. Final Answers: ", selectedAnswers);
     alert("Quiz submitted!");
+    navigate("/tutorial");
   };
 
   const progressPercentage = ((currentIndex + 1) / totalQuestions) * 100;

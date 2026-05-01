@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "./stylesheets/tutorialscreen.css";
 
@@ -62,12 +63,14 @@ const NAV_ITEMS = [
 ];
 
 function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <p className="sidebar-title">Computer Science</p>
         <p className="sidebar-subtitle">Academic Series</p>
-        <button className="quiz-start-btn">Attempt Quiz</button>
+        <button onClick = {() => navigate("/quiz")} className="quiz-start-btn">Attempt Quiz</button>
       </div>
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => (
