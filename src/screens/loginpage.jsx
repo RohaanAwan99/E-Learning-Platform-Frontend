@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './stylesheets/loginpage.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, clearError } from '../store/slices/authSlice';
 
 const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(clearError());
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [dispatch, isAuthenticated, navigate]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = () => {
-    //Ramis yaha login logic aye gi
-    navigate('/');
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    dispatch(loginUser({ email, password }));
   }
 
   return (
@@ -47,7 +62,9 @@ const LoginPage = () => {
           <h2 className="form-title">Log in</h2>
           <p className="form-subtitle">Enter your credentials to access your account.</p>
 
-          <form onSubmit={(e) => e.preventDefault()}>
+          {error && <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+
+          <form onSubmit={handleLogin}>
             <div className="input-group">
               <label htmlFor="email">Email Address</label>
               <div className="input-wrapper">
@@ -55,7 +72,14 @@ const LoginPage = () => {
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                   <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
-                <input type="email" id="email" placeholder="student@university.edu" />
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="student@university.edu" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                />
               </div>
             </div>
 
@@ -73,6 +97,9 @@ const LoginPage = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                 />
                 <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
                   {showPassword ? (
@@ -95,8 +122,8 @@ const LoginPage = () => {
               <label htmlFor="remember">Remember me on this device</label>
             </div>
 
-            <button onClick = {handleLogin} type="submit" className="login-button">
-              Login to Account
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login to Account'}
               <svg className="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -105,7 +132,7 @@ const LoginPage = () => {
           </form>
 
           <p className="signup-text">
-            Don't have an account yet? <a href="#">Sign up as a Student or Teacher</a>
+            Don't have an account yet? <span onClick={() => navigate('/signup')} style={{cursor: 'pointer', color: '#2b5a9e'}}>Sign up as a Student or Teacher</span>
           </p>
         </div>
       </div>

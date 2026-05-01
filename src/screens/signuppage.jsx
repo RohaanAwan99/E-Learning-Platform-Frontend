@@ -1,8 +1,63 @@
 import React, { useState } from 'react';
 import './stylesheets/signuppage.css';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../api/axios';
 
 const SignupPage = () => {
   const [role, setRole] = useState('student');
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    age: '',
+    gender: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id === 'fullName' ? 'name' : id]: value,
+    }));
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await axiosInstance.post('/auth/register', {
+        name: formData.name,
+        username: formData.username,
+        age: parseInt(formData.age),
+        gender: formData.gender,
+        email: formData.email,
+        password: formData.password,
+        role: role,
+      });
+      setSuccess(true);
+      setTimeout(() => navigate('/login'), 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="signup-container">
@@ -62,26 +117,29 @@ const SignupPage = () => {
           </div>
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className="signup-form">
+        {error && <div className="error-message" style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</div>}
+        {success && <div className="success-message" style={{ color: 'green', textAlign: 'center', marginBottom: '10px' }}>Registration successful! Redirecting to login...</div>}
+
+        <form onSubmit={handleSubmit} className="signup-form">
           <div className="input-group">
             <label htmlFor="fullName">Full Name</label>
-            <input type="text" id="fullName" placeholder="Jane Doe" />
+            <input type="text" id="fullName" placeholder="Jane Doe" value={formData.name} onChange={handleInputChange} required disabled={loading} />
           </div>
 
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <input type="text" id="username" placeholder="janedoe99" />
+            <input type="text" id="username" placeholder="janedoe99" value={formData.username} onChange={handleInputChange} required disabled={loading} />
           </div>
 
           <div className="input-row">
             <div className="input-group">
               <label htmlFor="age">Age</label>
-              <input type="number" id="age" placeholder="18" />
+              <input type="number" id="age" placeholder="18" value={formData.age} onChange={handleInputChange} required disabled={loading} />
             </div>
             <div className="input-group">
               <label htmlFor="gender">Gender</label>
               <div className="select-wrapper">
-                <select id="gender" defaultValue="">
+                <select id="gender" value={formData.gender} onChange={handleInputChange} required disabled={loading}>
                   <option value="" disabled>Select...</option>
                   <option value="female">Female</option>
                   <option value="male">Male</option>
@@ -97,29 +155,29 @@ const SignupPage = () => {
 
           <div className="input-group">
             <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" placeholder="jane@example.com" />
+            <input type="email" id="email" placeholder="jane@example.com" value={formData.email} onChange={handleInputChange} required disabled={loading} />
           </div>
 
           <div className="input-row">
             <div className="input-group">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" placeholder="••••••••" />
+              <input type="password" id="password" placeholder="••••••••" value={formData.password} onChange={handleInputChange} required disabled={loading} />
             </div>
             <div className="input-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" placeholder="••••••••" />
+              <input type="password" id="confirmPassword" placeholder="••••••••" value={formData.confirmPassword} onChange={handleInputChange} required disabled={loading} />
             </div>
           </div>
 
           <div className="terms-group">
-            <input type="checkbox" id="terms" />
+            <input type="checkbox" id="terms" required disabled={loading} />
             <label htmlFor="terms">
               I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
             </label>
           </div>
 
-          <button type="submit" className="submit-button">
-            Create Account
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -128,7 +186,7 @@ const SignupPage = () => {
         </form>
 
         <p className="login-prompt">
-          Already have an account? <a href="#">Log in</a>
+          Already have an account? <span onClick={() => navigate('/login')} style={{cursor: 'pointer', color: '#2b5a9e'}}>Log in</span>
         </p>
       </div>
     </div>
@@ -136,3 +194,4 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+

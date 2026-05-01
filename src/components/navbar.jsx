@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 import "./Navbar.css";
 
 const BellIcon = () => (
@@ -15,12 +17,28 @@ const SettingsIcon = () => (
   </svg>
 );
 
+const LogoutIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" y1="12" x2="9" y2="12" />
+  </svg>
+);
+
 const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Tutorials", path: "/tutorial" },
 ];
 
 export default function Navbar({ activeLink = "Tutorials" }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar">
       <span className="navbar-logo">EduLearn</span>
@@ -44,6 +62,9 @@ export default function Navbar({ activeLink = "Tutorials" }) {
         </button>
         <button className="icon-btn" aria-label="Settings">
           <SettingsIcon />
+        </button>
+        <button className="icon-btn logout-btn" aria-label="Sign Out" onClick={handleLogout} title="Sign Out">
+          <LogoutIcon />
         </button>
       </div>
     </nav>
