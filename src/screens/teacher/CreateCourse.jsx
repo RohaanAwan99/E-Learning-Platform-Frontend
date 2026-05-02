@@ -22,13 +22,13 @@ export default function CreateCourse() {
     setLoading(false);
   };
 
-  const inputStyle = { width: '100%', padding: '0.7rem 1rem', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' };
-  const labelStyle = { display: 'block', marginBottom: '0.35rem', fontWeight: 600, fontSize: '0.85rem', color: '#333' };
+  const inputStyle = { width: '100%', padding: '0.7rem 1rem', border: '1px solid var(--input-border)', borderRadius: '10px', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' };
+  const labelStyle = { display: 'block', marginBottom: '0.35rem', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-secondary)' };
 
   return (
     <><Navbar />
-      <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '0 2rem' }}>
-        <h1 style={{ fontSize: '1.6rem', color: '#1a1a2e' }}>Create New Course</h1>
+      <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '0 2rem', textAlign: 'left' }}>
+        <h1 style={{ fontSize: '1.6rem', color: 'var(--text-heading)' }}>Create New Course</h1>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1.5rem' }}>
           <div><label style={labelStyle}>Title</label><input style={inputStyle} value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="Course title" /></div>
           <div><label style={labelStyle}>Description</label><textarea style={{...inputStyle, minHeight:'120px', resize:'vertical'}} value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Course description" /></div>
@@ -37,8 +37,8 @@ export default function CreateCourse() {
             <div style={{flex:1}}><label style={labelStyle}>Difficulty</label><select style={inputStyle} value={form.difficulty} onChange={e => setForm({...form, difficulty: e.target.value})}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div>
           </div>
           <div><label style={labelStyle}>Tags (comma-separated)</label><input style={inputStyle} value={form.tags} onChange={e => setForm({...form, tags: e.target.value})} placeholder="react, javascript, web" /></div>
-          <label style={{display:'flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}><input type="checkbox" checked={form.isPublished} onChange={e => setForm({...form, isPublished: e.target.checked})} /> Publish immediately</label>
-          <button type="submit" disabled={loading} style={{background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',border:'none',padding:'0.85rem',borderRadius:'10px',fontWeight:700,fontSize:'1rem',cursor:'pointer'}}>{loading ? 'Creating...' : 'Create Course'}</button>
+          <label style={{display:'flex',alignItems:'center',gap:'0.5rem',cursor:'pointer',color:'var(--text-secondary)',fontSize:'0.9rem'}}><input type="checkbox" checked={form.isPublished} onChange={e => setForm({...form, isPublished: e.target.checked})} style={{accentColor:'var(--accent)'}} /> Publish immediately</label>
+          <button type="submit" disabled={loading} style={{background:'linear-gradient(135deg,var(--accent),var(--accent-hover, #4f46e5))',color:'#fff',border:'none',padding:'0.85rem',borderRadius:'10px',fontWeight:700,fontSize:'1rem',cursor:'pointer',fontFamily:'var(--font-sans)'}}>{loading ? 'Creating...' : 'Create Course'}</button>
         </form>
       </div>
     </>

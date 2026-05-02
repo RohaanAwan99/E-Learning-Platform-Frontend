@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import API from '../../api/axios';
-import '../stylesheets/homescreen.css';
+import '../stylesheets/studentDashboard.css';
 
 export default function TeacherDashboard() {
   const [courses, setCourses] = useState([]);
@@ -32,50 +32,60 @@ export default function TeacherDashboard() {
           <h1>Teacher Dashboard</h1>
           <p>Manage your courses and content.</p>
         </div>
-        <div style={{display:'flex',gap:'1rem',marginBottom:'2rem',flexWrap:'wrap'}}>
-          <div style={{background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',padding:'1.5rem',borderRadius:'14px',flex:1,minWidth:'180px'}}>
+
+        {/* Stats Row */}
+        <div className="stats-row" style={{gridTemplateColumns:'repeat(4, 1fr)'}}>
+          <div style={{background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',padding:'1.5rem',borderRadius:'14px'}}>
             <p style={{opacity:0.8,margin:0,fontSize:'0.85rem'}}>Total Courses</p>
-            <h2 style={{margin:'0.25rem 0 0',fontSize:'2rem'}}>{courses.length}</h2>
+            <h2 style={{margin:'0.25rem 0 0',fontSize:'2rem',color:'#fff'}}>{courses.length}</h2>
           </div>
-          <div style={{background:'linear-gradient(135deg,#0f766e,#14b8a6)',color:'#fff',padding:'1.5rem',borderRadius:'14px',flex:1,minWidth:'180px'}}>
+          <div style={{background:'linear-gradient(135deg,#0f766e,#14b8a6)',color:'#fff',padding:'1.5rem',borderRadius:'14px'}}>
             <p style={{opacity:0.8,margin:0,fontSize:'0.85rem'}}>Total Students</p>
-            <h2 style={{margin:'0.25rem 0 0',fontSize:'2rem'}}>{totalStudents}</h2>
+            <h2 style={{margin:'0.25rem 0 0',fontSize:'2rem',color:'#fff'}}>{totalStudents}</h2>
           </div>
-          <Link to="/teacher/courses/new" style={{background:'linear-gradient(135deg,#f59e0b,#f97316)',color:'#fff',padding:'1.5rem',borderRadius:'14px',flex:1,minWidth:'180px',textDecoration:'none',display:'flex',flexDirection:'column',justifyContent:'center'}}>
+          <Link to="/teacher/courses/new" style={{background:'linear-gradient(135deg,#f59e0b,#f97316)',color:'#fff',padding:'1.5rem',borderRadius:'14px',textDecoration:'none',display:'flex',flexDirection:'column',justifyContent:'center'}}>
             <p style={{margin:0,fontSize:'0.85rem',opacity:0.8}}>Quick Action</p>
-            <h2 style={{margin:'0.25rem 0 0',fontSize:'1.2rem'}}>+ Create Course</h2>
+            <h2 style={{margin:'0.25rem 0 0',fontSize:'1.2rem',color:'#fff'}}>+ Create Course</h2>
           </Link>
-          <Link to="/teacher/blogs/new" style={{background:'linear-gradient(135deg,#ec4899,#f43f5e)',color:'#fff',padding:'1.5rem',borderRadius:'14px',flex:1,minWidth:'180px',textDecoration:'none',display:'flex',flexDirection:'column',justifyContent:'center'}}>
+          <Link to="/teacher/blogs/new" style={{background:'linear-gradient(135deg,#ec4899,#f43f5e)',color:'#fff',padding:'1.5rem',borderRadius:'14px',textDecoration:'none',display:'flex',flexDirection:'column',justifyContent:'center'}}>
             <p style={{margin:0,fontSize:'0.85rem',opacity:0.8}}>Quick Action</p>
-            <h2 style={{margin:'0.25rem 0 0',fontSize:'1.2rem'}}>+ Create Blog</h2>
+            <h2 style={{margin:'0.25rem 0 0',fontSize:'1.2rem',color:'#fff'}}>+ Create Blog</h2>
           </Link>
         </div>
-        <h2 style={{fontSize:'1.2rem',color:'#1a1a2e',marginBottom:'1rem'}}>Your Courses</h2>
-        <div className="dashboard-grid">
-          {loading ? <p style={{color:'#999'}}>Loading...</p> : courses.length === 0 ? <p style={{color:'#999'}}>No courses yet. Create your first!</p> :
+
+        {/* Courses */}
+        <div className="section-header">
+          <h2>📚 Your Courses</h2>
+        </div>
+        <div className="course-progress-grid">
+          {loading ? <p style={{color:'var(--text-muted)'}}>Loading...</p> : courses.length === 0 ? <p style={{color:'var(--text-muted)'}}>No courses yet. Create your first!</p> :
             courses.map(c => (
-              <Link to={`/teacher/courses/${c._id}`} key={c._id} className="course-card" style={{textDecoration:'none'}}>
-                <h2 className="course-subject">{c.title}</h2>
-                <p className="course-topic">{c.category} · {c.difficulty}</p>
-                <div className="card-bottom">
-                  <span style={{fontSize:'0.82rem',color:'#666'}}>{c.totalEnrolments} students · {c.isPublished ? '✅ Published' : '📝 Draft'}</span>
+              <Link to={`/teacher/courses/${c._id}`} key={c._id} className="course-progress-card">
+                <h3 className="course-title">{c.title}</h3>
+                <span className="course-meta">{c.category} · {c.difficulty}</span>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.82rem',color:'var(--text-muted)'}}>
+                  <span>👥 {c.totalEnrolments} students</span>
+                  <span style={{color: c.isPublished ? 'var(--success)' : 'var(--warning)', fontWeight:600}}>{c.isPublished ? '✅ Published' : '📝 Draft'}</span>
                 </div>
               </Link>
             ))
           }
         </div>
-        {/* Teacher's Blog Posts */}
+
+        {/* Blog Posts */}
         {blogs.length > 0 && (
           <>
-            <h2 style={{fontSize:'1.2rem',color:'#1a1a2e',marginBottom:'1rem',marginTop:'2rem'}}>Your Blog Posts</h2>
+            <div className="section-header" style={{marginTop:'1rem'}}>
+              <h2>📝 Your Blog Posts</h2>
+            </div>
             <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
               {blogs.map(b => (
-                <Link to={`/blogs/${b._id}`} key={b._id} style={{textDecoration:'none',color:'inherit',background:'#fff',padding:'1rem 1.25rem',borderRadius:'12px',boxShadow:'0 2px 8px rgba(0,0,0,0.05)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <Link to={`/blogs/${b._id}`} key={b._id} style={{textDecoration:'none',color:'inherit',background:'var(--bg-card)',padding:'1rem 1.25rem',borderRadius:'12px',border:'1px solid var(--border)',boxShadow:'var(--shadow-sm)',display:'flex',justifyContent:'space-between',alignItems:'center',transition:'background 0.25s,border-color 0.25s'}}>
                   <div>
-                    <h3 style={{margin:0,fontSize:'0.95rem',color:'#1a1a2e'}}>{b.title}</h3>
-                    <p style={{margin:'0.25rem 0 0',fontSize:'0.78rem',color:'#888'}}>💬 {b.comments?.length || 0} comments · {b.tags?.join(', ')}</p>
+                    <h3 style={{margin:0,fontSize:'0.95rem',color:'var(--text-heading)'}}>{b.title}</h3>
+                    <p style={{margin:'0.25rem 0 0',fontSize:'0.78rem',color:'var(--text-muted)'}}>💬 {b.comments?.length || 0} comments · {b.tags?.join(', ')}</p>
                   </div>
-                  <span style={{fontSize:'0.75rem',color:b.isPublished?'#16a34a':'#f59e0b',fontWeight:600}}>{b.isPublished ? '✅ Published' : '📝 Draft'}</span>
+                  <span style={{fontSize:'0.75rem',color:b.isPublished?'var(--success)':'var(--warning)',fontWeight:600}}>{b.isPublished ? '✅ Published' : '📝 Draft'}</span>
                 </Link>
               ))}
             </div>

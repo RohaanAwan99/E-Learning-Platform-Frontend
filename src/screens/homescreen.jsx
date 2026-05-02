@@ -1,77 +1,225 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import API from '../api/axios';
-import './stylesheets/homescreen.css';
+import './stylesheets/studentDashboard.css';
 
 const HomeScreen = () => {
   const { user } = useSelector((state) => state.auth);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadDashboard = async () => {
       try {
-        const { data } = await API.get('/profile/me');
-        const profile = data.data.profile;
-        if (profile?.enrolledCourses?.length) {
-          const coursePromises = profile.enrolledCourses.map((id) => {
-            const courseId = typeof id === 'object' ? id._id : id;
-            return API.get('/courses/' + courseId).catch(() => null);
-          });
-          const results = await Promise.all(coursePromises);
-          const courses = results.filter(r => r).map(r => r.data.data);
-          setEnrolledCourses(courses);
-        }
-      } catch (err) { console.error(err); }
+        const { data } = await API.get('/progress/dashboard');
+        setDashboard(data.data);
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+      }
       setLoading(false);
     };
-    loadProfile();
+    loadDashboard();
   }, []);
 
-  const iconColors = ['#2563eb', '#9333ea', '#0f766e', '#f59e0b', '#ef4444', '#06b6d4'];
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const inProgressCourses = dashboard?.courses?.filter(c => !c.isCompleted && c.lectureProgress > 0) || [];
+  const notStartedCourses = dashboard?.courses?.filter(c => !c.isCompleted && c.lectureProgress === 0) || [];
+  const completedCourses = dashboard?.courses?.filter(c => c.isCompleted) || [];
 
   return (
     <>
       <Navbar />
       <div className="dashboard-wrapper">
         <div className="dashboard-header">
-          <h1>Welcome back, {user?.name?.split(' ')[0] || 'Student'}</h1>
-          <p>Continue your learning journey.</p>
+          <h1>Welcome back, {user?.name?.split(' ')[0] || 'Student'} 👋</h1>
+          <p>Here's an overview of your learning journey.</p>
         </div>
-        <div className="dashboard-grid">
-          {loading ? (
-            <div className="course-card"><p style={{ color: '#999', padding: '2rem' }}>Loading your courses...</p></div>
-          ) : enrolledCourses.length === 0 ? (
-            <div className="course-card">
-              <p style={{ color: '#999', padding: '2rem' }}>You haven't enrolled in any courses yet.</p>
+
+        {/* Loading Skeleton */}
+        {loading ? (
+          <>
+            <div className="stats-row">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="skeleton-card stat-card">
+                  <div className="skeleton-line short"></div>
+                  <div className="skeleton-line medium"></div>
+                </div>
+              ))}
             </div>
-          ) : (
-            enrolledCourses.map((course, idx) => (
-              <Link to={'/courses/' + course._id} key={course._id} className="course-card" style={{ textDecoration: 'none' }}>
-                <div className="card-top">
-                  <div className="course-icon" style={{ backgroundColor: iconColors[idx % iconColors.length], color: '#fff' }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                  </div>
-                  <span className="course-badge">{course.difficulty || 'beginner'}</span>
+            <div className="course-progress-grid">
+              {[1,2].map(i => (
+                <div key={i} className="skeleton-card">
+                  <div className="skeleton-line"></div>
+                  <div className="skeleton-line short"></div>
+                  <div className="skeleton-line medium"></div>
                 </div>
-                <h2 className="course-subject">{course.title}</h2>
-                <p className="course-topic">{course.category}</p>
-                <div className="card-bottom">
-                  <button className="btn btn-primary">Continue Learning</button>
+              ))}
+            </div>
+          </>
+        ) : !dashboard || dashboard.totalEnrolled === 0 ? (
+          /* Empty State */
+          <div className="empty-state">
+            <p style={{fontSize:'2.5rem',marginBottom:'0.5rem'}}>📚</p>
+            <p>You haven't enrolled in any courses yet.</p>
+            <Link to="/courses">Explore Courses</Link>
+          </div>
+        ) : (
+          <>
+            {/* Stats Row */}
+            <div className="stats-row">
+              <div className="stat-card">
+                <div className="stat-icon" style={{background:'#eff6ff',color:'#3b82f6'}}>📘</div>
+                <div className="stat-value">{dashboard.totalEnrolled}</div>
+                <div className="stat-label">Enrolled Courses</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon" style={{background:'#f0fdf4',color:'#22c55e'}}>✅</div>
+                <div className="stat-value">{dashboard.totalCompleted}</div>
+                <div className="stat-label">Completed</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon" style={{background:'#fef3c7',color:'#f59e0b'}}>📝</div>
+                <div className="stat-value">{dashboard.quizzesPassed}/{dashboard.quizzesAttempted || 0}</div>
+                <div className="stat-label">Quizzes Passed</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon" style={{background:'#f5f3ff',color:'#8b5cf6'}}>🎓</div>
+                <div className="stat-value">{dashboard.certificatesEarned}</div>
+                <div className="stat-label">Certificates</div>
+              </div>
+            </div>
+
+            {/* Continue Learning */}
+            {inProgressCourses.length > 0 && (
+              <>
+                <div className="section-header">
+                  <h2>📖 Continue Learning</h2>
                 </div>
+                <div className="course-progress-grid">
+                  {inProgressCourses.map(course => (
+                    <div key={course.courseId} className="course-progress-card">
+                      <Link to={`/courses/${course.courseId}`} style={{textDecoration:'none',color:'inherit'}}>
+                        <div className="card-top-row">
+                          <h3 className="course-title">{course.title}</h3>
+                          <span style={{fontSize:'0.72rem',padding:'0.2rem 0.5rem',borderRadius:'6px',background:'var(--bg-muted)',color:'var(--text-muted)',fontWeight:600,whiteSpace:'nowrap'}}>{course.difficulty || 'Beginner'}</span>
+                        </div>
+                        <span className="course-meta">{course.category} · {course.completedLectures}/{course.totalLectures} lectures</span>
+                        <div className="progress-bar-container">
+                          <div className="progress-bar-bg">
+                            <div className="progress-bar-fill" style={{width:`${course.lectureProgress}%`}}></div>
+                          </div>
+                          <div className="progress-bar-label">
+                            <span>{course.lectureProgress}% complete</span>
+                            <span>{course.quizzesPassed}/{course.totalQuizzes} quizzes</span>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to={`/courses/${course.courseId}/stats`} style={{display:'inline-block',marginTop:'0.5rem',fontSize:'0.8rem',color:'var(--accent)',fontWeight:600,textDecoration:'none'}}>📊 View Stats →</Link>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Not Started */}
+            {notStartedCourses.length > 0 && (
+              <>
+                <div className="section-header">
+                  <h2>🆕 Get Started</h2>
+                </div>
+                <div className="course-progress-grid">
+                  {notStartedCourses.map(course => (
+                    <Link to={`/courses/${course.courseId}`} key={course.courseId} className="course-progress-card">
+                      <h3 className="course-title">{course.title}</h3>
+                      <span className="course-meta">{course.category} · {course.totalLectures} lectures · {course.totalQuizzes} quizzes</span>
+                      <div className="progress-bar-container">
+                        <div className="progress-bar-bg">
+                          <div className="progress-bar-fill" style={{width:'0%'}}></div>
+                        </div>
+                        <div className="progress-bar-label">
+                          <span>Not started</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Recent Activity */}
+            {dashboard.recentActivity?.length > 0 && (
+              <>
+                <div className="section-header">
+                  <h2>⚡ Recent Activity</h2>
+                </div>
+                <div className="activity-feed" style={{background:'var(--bg-card, #fff)',borderRadius:'14px',padding:'0.5rem 1.25rem',border:'1px solid var(--border, #e2e8f0)',marginBottom:'2rem'}}>
+                  {dashboard.recentActivity.map((activity, i) => (
+                    <div key={i} className="activity-item">
+                      <div className="activity-icon" style={{
+                        background: activity.type === 'lecture_completed' ? '#f0fdf4' : activity.passed ? '#f0fdf4' : '#fef2f2'
+                      }}>
+                        {activity.type === 'lecture_completed' ? '📖' : activity.passed ? '✅' : '❌'}
+                      </div>
+                      <div className="activity-text">
+                        <strong>
+                          {activity.type === 'lecture_completed'
+                            ? 'Completed a lecture'
+                            : `Quiz ${activity.passed ? 'passed' : 'attempted'} — ${activity.score}%`
+                          }
+                        </strong>
+                        <span>{formatDate(activity.timestamp)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Completed Courses */}
+            {completedCourses.length > 0 && (
+              <>
+                <div className="section-header">
+                  <h2>🏆 Completed</h2>
+                  <Link to="/certificates">View Certificates →</Link>
+                </div>
+                <div className="completed-grid">
+                  {completedCourses.map(course => (
+                    <Link to={`/courses/${course.courseId}`} key={course.courseId} className="completed-card">
+                      <div className="completed-badge">🎉</div>
+                      <div className="completed-info">
+                        <h3>{course.title}</h3>
+                        <p>{course.category} · {course.quizzesPassed}/{course.totalQuizzes} quizzes passed</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Explore More */}
+            <div style={{textAlign:'center',marginTop:'1rem'}}>
+              <Link to="/courses" style={{
+                display:'inline-flex',alignItems:'center',gap:'0.4rem',
+                color:'var(--accent, #6366f1)',fontWeight:600,fontSize:'0.9rem',textDecoration:'none'
+              }}>
+                Explore more courses →
               </Link>
-            ))
-          )}
-          <Link to="/courses" className="course-card explore-card" style={{ textDecoration: 'none' }}>
-            <div className="explore-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </div>
-            <h2 className="explore-title">Explore Courses</h2>
-            <p className="explore-subtitle">Find new subjects to master.</p>
-          </Link>
-        </div>
+          </>
+        )}
       </div>
     </>
   );

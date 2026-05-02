@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import API from '../api/axios';
 import './stylesheets/tutorialscreen.css';
+import './stylesheets/lectureContent.css';
 
 export default function TutorialScreen() {
   const { courseId, moduleId } = useParams();
@@ -109,7 +110,7 @@ export default function TutorialScreen() {
             <article>
               <h1>{currentModule.lecture?.title || currentModule.module?.title || 'Lecture'}</h1>
               <div
-                className="body-text"
+                className="lecture-content"
                 dangerouslySetInnerHTML={{
                   __html: currentModule.lecture?.content || '<p>No content available for this module.</p>'
                 }}

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { logout } from "../store/slices/authSlice";
 import { fetchNotifications, markAsRead, markAllAsRead } from "../store/slices/notificationSlice";
+import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
 
 const BellIcon = () => (
@@ -24,6 +25,18 @@ const SearchIcon = () => (
   </svg>
 );
 
+const MenuIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
 export default function Navbar() {
   const { user, token } = useSelector((state) => state.auth);
   const { notifications, unreadCount } = useSelector((state) => state.notifications);
@@ -31,6 +44,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [showNotif, setShowNotif] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const notifRef = useRef(null);
 
   useEffect(() => {
@@ -43,6 +57,11 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [window.location.pathname]);
+
   const handleLogout = () => { dispatch(logout()); navigate("/login"); };
 
   const handleSearch = (e) => {
@@ -50,6 +69,7 @@ export default function Navbar() {
     if (searchQuery.trim()) {
       navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
+      setMobileMenuOpen(false);
     }
   };
 
@@ -64,7 +84,7 @@ export default function Navbar() {
     ];
     if (user.role === "teacher") return [
       { to: "/teacher/dashboard", label: "Dashboard" },
-      { to: "/courses", label: "Browse" },
+      { to: "/teacher/students", label: "My Students" },
       { to: "/blogs", label: "Blogs" },
       { to: "/profile", label: "Profile" },
     ];
@@ -77,67 +97,108 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo">EduLearn</Link>
+      <div className="navbar-inner">
+        <Link to="/" className="navbar-logo">EduLearn</Link>
 
-      {/* Search bar for students */}
-      {user?.role === 'student' && (
-        <form onSubmit={handleSearch} className="navbar-search-form">
-          <SearchIcon />
-          <input
-            type="text"
-            placeholder="Search courses..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="navbar-search-input"
-          />
-        </form>
-      )}
+        {/* Search bar for students */}
+        {user?.role === 'student' && (
+          <form onSubmit={handleSearch} className="navbar-search-form">
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search courses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="navbar-search-input"
+            />
+          </form>
+        )}
 
-      <ul className="navbar-links">
-        {getLinks().map((link) => (
-          <li key={link.to}>
-            <NavLink to={link.to} className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
-              {link.label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-      <div className="navbar-icons">
-        {token && (
-          <div className="notif-wrapper" ref={notifRef}>
-            <button className="icon-btn" aria-label="Notifications" onClick={() => setShowNotif(!showNotif)}>
-              <BellIcon />
-              {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-            </button>
-            {showNotif && (
-              <div className="notif-dropdown">
-                <div className="notif-header">
-                  <span>Notifications</span>
-                  {unreadCount > 0 && <button className="notif-mark-all" onClick={() => dispatch(markAllAsRead())}>Mark all read</button>}
+        {/* Desktop Links */}
+        <ul className="navbar-links">
+          {getLinks().map((link) => (
+            <li key={link.to}>
+              <NavLink to={link.to} className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
+                {link.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+
+        <div className="navbar-icons">
+          <ThemeToggle />
+          {token && (
+            <div className="notif-wrapper" ref={notifRef}>
+              <button className="icon-btn" aria-label="Notifications" onClick={() => setShowNotif(!showNotif)}>
+                <BellIcon />
+                {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+              </button>
+              {showNotif && (
+                <div className="notif-dropdown">
+                  <div className="notif-header">
+                    <span>Notifications</span>
+                    {unreadCount > 0 && <button className="notif-mark-all" onClick={() => dispatch(markAllAsRead())}>Mark all read</button>}
+                  </div>
+                  {notifications.length === 0 ? (
+                    <p className="notif-empty">No notifications</p>
+                  ) : (
+                    notifications.slice(0, 10).map((n) => (
+                      <div key={n._id} className={`notif-item ${n.isRead ? "" : "unread"}`} onClick={() => { dispatch(markAsRead(n._id)); if (n.link) navigate(n.link); setShowNotif(false); }}>
+                        <p className="notif-title">{n.type?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</p>
+                        <p className="notif-msg">{n.message}</p>
+                      </div>
+                    ))
+                  )}
                 </div>
-                {notifications.length === 0 ? (
-                  <p className="notif-empty">No notifications</p>
-                ) : (
-                  notifications.slice(0, 10).map((n) => (
-                    <div key={n._id} className={`notif-item ${n.isRead ? "" : "unread"}`} onClick={() => { dispatch(markAsRead(n._id)); if (n.link) navigate(n.link); setShowNotif(false); }}>
-                      <p className="notif-title">{n.type?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</p>
-                      <p className="notif-msg">{n.message}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        {user && (
-          <span className="navbar-user">{user.name?.split(" ")[0]}</span>
-        )}
-        {token && (
-          <button className="icon-btn" aria-label="Logout" onClick={handleLogout}>
-            <LogoutIcon />
+              )}
+            </div>
+          )}
+          {user && (
+            <span className="navbar-user">{user.name?.split(" ")[0]}</span>
+          )}
+          {token && (
+            <button className="icon-btn" aria-label="Logout" onClick={handleLogout}>
+              <LogoutIcon />
+            </button>
+          )}
+          {/* Hamburger for mobile */}
+          <button className="hamburger-btn" aria-label="Menu" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
-        )}
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu">
+          {user?.role === 'student' && (
+            <form onSubmit={handleSearch} className="mobile-search-form">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="navbar-search-input"
+              />
+            </form>
+          )}
+          <ul className="mobile-links">
+            {getLinks().map((link) => (
+              <li key={link.to}>
+                <NavLink to={link.to} onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => `mobile-link ${isActive ? "active" : ""}`}>
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          {token && (
+            <button className="mobile-logout" onClick={handleLogout}>
+              <LogoutIcon /> Logout
+            </button>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
