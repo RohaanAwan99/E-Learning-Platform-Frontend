@@ -32,53 +32,58 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container">
-      <div className="signup-card">
-        <div className="header-section">
-          <div className="logo-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <div className="hero-section">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <div className="logo-container">
+            <svg className="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
             </svg>
+            <span className="logo-text">EduLearn</span>
           </div>
-          <h1 className="title">Create your account</h1>
-          <p className="subtitle">Join EduLearn and start your learning journey.</p>
+          <h1 className="hero-title">Start your<br />learning journey<br />today.</h1>
+          <p className="hero-subtitle">Join thousands of learners worldwide.<br />Create your free account to get started.</p>
         </div>
-        <div className="role-selection">
-          <label className="section-label">I am a...</label>
-          <div className="role-cards">
-            <div className={`role-card ${role === 'student' ? 'active' : ''}`} onClick={() => setRole('student')}>
-              {role === 'student' && <div className="check-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>}
-              <span>Student</span>
+      </div>
+      <div className="form-section">
+        <div className="form-wrapper">
+          <h2 className="form-title">Sign Up</h2>
+          <p className="form-subtitle">Create a new account.</p>
+          <div className="role-toggle">
+            <button className={`role-btn ${role === 'student' ? 'active' : ''}`} onClick={() => setRole('student')}>Student</button>
+            <button className={`role-btn ${role === 'teacher' ? 'active' : ''}`} onClick={() => setRole('teacher')}>Teacher</button>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label htmlFor="name">Full Name</label>
+              <div className="input-wrapper">
+                <input type="text" id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
             </div>
-            <div className={`role-card ${role === 'teacher' ? 'active' : ''}`} onClick={() => setRole('teacher')}>
-              {role === 'teacher' && <div className="check-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>}
-              <span>Teacher</span>
+            <div className="input-group">
+              <label htmlFor="email">Email Address</label>
+              <div className="input-wrapper">
+                <input type="email" id="email" placeholder="student@university.edu" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
             </div>
-          </div>
-        </div>
-        <form onSubmit={handleSubmit} className="signup-form">
-          <div className="input-group">
-            <label htmlFor="fullName">Full Name</label>
-            <input type="text" id="fullName" placeholder="Jane Doe" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="input-group">
-            <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" placeholder="jane@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div className="input-row">
             <div className="input-group">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <div className="input-wrapper">
+                <input type="password" id="password" placeholder="Min. 6 characters" value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
             </div>
             <div className="input-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+              <div className="input-wrapper">
+                <input type="password" id="confirmPassword" placeholder="Retype your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+              </div>
             </div>
-          </div>
-          <button type="submit" className="submit-button" disabled={loading}>
-            {loading ? "Creating..." : "Create Account"}
-          </button>
-        </form>
-        <p className="login-prompt">Already have an account? <Link to="/login">Log in</Link></p>
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+          </form>
+          <p className="signup-text">Already have an account? <Link to="/login">Log in</Link></p>
+        </div>
       </div>
     </div>
   );

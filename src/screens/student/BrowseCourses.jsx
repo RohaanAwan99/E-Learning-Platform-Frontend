@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses } from '../../store/slices/courseSlice';
 import Navbar from '../../components/Navbar';
@@ -8,9 +8,15 @@ import './BrowseCourses.css';
 export default function BrowseCourses() {
   const dispatch = useDispatch();
   const { courses, loading } = useSelector((s) => s.courses);
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [category, setCategory] = useState('');
   const [difficulty, setDifficulty] = useState('');
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    if (urlSearch) setSearch(urlSearch);
+  }, [searchParams]);
 
   useEffect(() => {
     const params = { isPublished: true };

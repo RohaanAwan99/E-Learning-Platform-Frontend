@@ -18,16 +18,13 @@ const AttemptQuiz = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        // The quiz endpoint returns { data: quiz } with populated questions
         const quizRes = await API.get(`/courses/${courseId}/modules/${moduleId}/quiz`);
         const quiz = quizRes.data.data;
         setQuizId(quiz._id);
 
-        // Questions are already populated in the quiz response
         if (quiz.questions && quiz.questions.length > 0 && typeof quiz.questions[0] === 'object') {
           setQuestions(quiz.questions);
         } else {
-          // Fallback: fetch questions separately if not populated
           try {
             const qRes = await API.get(`/questions?quiz=${quiz._id}`);
             setQuestions(qRes.data.data || []);
@@ -59,7 +56,7 @@ const AttemptQuiz = () => {
       const { data } = await API.post('/attempts', { quizId, answers });
       setResult(data.data);
       setSubmitted(true);
-      toast.success(`Score: ${data.data.score}% — ${data.data.passed ? 'Passed!' : 'Try again'}`);
+      toast.success(`Score: ${data.data.score}% - ${data.data.passed ? 'Passed!' : 'Try again'}`);
     } catch (err) { toast.error(err.response?.data?.message || 'Submission failed'); }
   };
 
@@ -84,7 +81,7 @@ const AttemptQuiz = () => {
             <p className="result-score">Score: {result.score}%</p>
             <p>{result.passed ? 'You passed the quiz!' : 'You did not meet the passing score.'}</p>
             {result.passed && (
-              <button className="btn btn-primary" style={{marginTop:'1rem'}} onClick={handleGenerateCert}>🏆 Generate Certificate</button>
+              <button className="btn btn-primary" style={{marginTop:'1rem'}} onClick={handleGenerateCert}>Generate Certificate</button>
             )}
             <button className="btn btn-secondary" style={{marginTop:'0.5rem'}} onClick={() => navigate(`/courses/${courseId}`)}>Back to Course</button>
           </div>

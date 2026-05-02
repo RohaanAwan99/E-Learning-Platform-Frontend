@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -16,10 +16,9 @@ const HomeScreen = () => {
         const { data } = await API.get('/profile/me');
         const profile = data.data.profile;
         if (profile?.enrolledCourses?.length) {
-          // enrolledCourses are ObjectId strings — fetch full course details
           const coursePromises = profile.enrolledCourses.map((id) => {
             const courseId = typeof id === 'object' ? id._id : id;
-            return API.get(`/courses/${courseId}`).catch(() => null);
+            return API.get('/courses/' + courseId).catch(() => null);
           });
           const results = await Promise.all(coursePromises);
           const courses = results.filter(r => r).map(r => r.data.data);
@@ -50,7 +49,7 @@ const HomeScreen = () => {
             </div>
           ) : (
             enrolledCourses.map((course, idx) => (
-              <Link to={`/courses/${course._id}`} key={course._id} className="course-card" style={{ textDecoration: 'none' }}>
+              <Link to={'/courses/' + course._id} key={course._id} className="course-card" style={{ textDecoration: 'none' }}>
                 <div className="card-top">
                   <div className="course-icon" style={{ backgroundColor: iconColors[idx % iconColors.length], color: '#fff' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>

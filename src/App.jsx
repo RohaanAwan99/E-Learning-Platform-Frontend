@@ -29,7 +29,6 @@ import NotFoundPage from './screens/NotFoundPage'
 function App() {
   const { user } = useSelector((state) => state.auth)
 
-  // Redirect root to appropriate dashboard
   const getRootRedirect = () => {
     if (!user) return <Navigate to="/login" replace />
     if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />
@@ -48,7 +47,7 @@ function App() {
 
       {/* Student */}
       <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['student']}><HomeScreen /></ProtectedRoute>} />
-      <Route path="/courses" element={<ProtectedRoute allowedRoles={['student']}><BrowseCourses /></ProtectedRoute>} />
+      <Route path="/courses" element={<ProtectedRoute allowedRoles={['student','teacher']}><BrowseCourses /></ProtectedRoute>} />
       <Route path="/courses/:id" element={<ProtectedRoute allowedRoles={['student']}><CourseDetail /></ProtectedRoute>} />
       <Route path="/courses/:courseId/modules/:moduleId" element={<ProtectedRoute allowedRoles={['student']}><TutorialScreen /></ProtectedRoute>} />
       <Route path="/courses/:courseId/modules/:moduleId/quiz" element={<ProtectedRoute allowedRoles={['student']}><AttemptQuiz /></ProtectedRoute>} />
@@ -78,4 +77,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

@@ -9,7 +9,6 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Redirect to the appropriate dashboard
     if (user.role === "student") return <Navigate to="/dashboard" replace />;
     if (user.role === "teacher") return <Navigate to="/teacher/dashboard" replace />;
     if (user.role === "admin") return <Navigate to="/admin/dashboard" replace />;

@@ -18,12 +18,19 @@ const LogoutIcon = () => (
   </svg>
 );
 
+const SearchIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+
 export default function Navbar() {
   const { user, token } = useSelector((state) => state.auth);
   const { notifications, unreadCount } = useSelector((state) => state.notifications);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showNotif, setShowNotif] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const notifRef = useRef(null);
 
   useEffect(() => {
@@ -38,6 +45,14 @@ export default function Navbar() {
 
   const handleLogout = () => { dispatch(logout()); navigate("/login"); };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
+
   const getLinks = () => {
     if (!user) return [];
     if (user.role === "student") return [
@@ -49,6 +64,7 @@ export default function Navbar() {
     ];
     if (user.role === "teacher") return [
       { to: "/teacher/dashboard", label: "Dashboard" },
+      { to: "/courses", label: "Browse" },
       { to: "/blogs", label: "Blogs" },
       { to: "/profile", label: "Profile" },
     ];
@@ -62,6 +78,21 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">EduLearn</Link>
+
+      {/* Search bar for students */}
+      {user?.role === 'student' && (
+        <form onSubmit={handleSearch} className="navbar-search-form">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="navbar-search-input"
+          />
+        </form>
+      )}
+
       <ul className="navbar-links">
         {getLinks().map((link) => (
           <li key={link.to}>
