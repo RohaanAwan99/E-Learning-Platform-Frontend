@@ -15,6 +15,7 @@ const AttemptQuiz = () => {
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [startedAt] = useState(() => new Date().toISOString());
   const [timeLeft, setTimeLeft] = useState(null); // seconds remaining
   const [showReview, setShowReview] = useState(false);
@@ -70,8 +71,9 @@ const AttemptQuiz = () => {
 
   // Auto-submit callback
   const doSubmit = useCallback(async () => {
-    if (submitted || hasAutoSubmitted.current) return;
+    if (submitted || isSubmitting || hasAutoSubmitted.current) return;
     hasAutoSubmitted.current = true;
+    setIsSubmitting(true);
     const answers = questions.map((q, i) => ({
       questionId: q._id,
       selectedIndex: q.options.indexOf(selectedAnswers[i]) >= 0 ? q.options.indexOf(selectedAnswers[i]) : 0,
@@ -82,6 +84,7 @@ const AttemptQuiz = () => {
       setSubmitted(true);
       toast.success(`Score: ${data.data.score}% - ${data.data.passed ? 'Passed!' : 'Try again'}`);
     } catch (err) { toast.error(err.response?.data?.message || 'Submission failed'); }
+    setIsSubmitting(false);
   }, [questions, selectedAnswers, quizId, startedAt, submitted]);
 
   // Auto-submit when timer reaches 0
@@ -105,6 +108,12 @@ const AttemptQuiz = () => {
   const handlePrevious = () => { if (currentIndex > 0) setCurrentIndex(currentIndex - 1); };
 
   const handleSubmit = async () => {
+    if (submitted || isSubmitting) return;
+    if (Object.keys(selectedAnswers).length < questions.length) {
+      toast.error('Please answer all questions before submitting.');
+      return;
+    }
+    setIsSubmitting(true);
     const answers = questions.map((q, i) => ({
       questionId: q._id,
       selectedIndex: q.options.indexOf(selectedAnswers[i]) >= 0 ? q.options.indexOf(selectedAnswers[i]) : 0,
@@ -116,6 +125,7 @@ const AttemptQuiz = () => {
       clearInterval(timerRef.current);
       toast.success(`Score: ${data.data.score}% - ${data.data.passed ? 'Passed!' : 'Try again'}`);
     } catch (err) { toast.error(err.response?.data?.message || 'Submission failed'); }
+    setIsSubmitting(false);
   };
 
   const handleGenerateCert = async () => {
@@ -254,7 +264,9 @@ const AttemptQuiz = () => {
           <button className="btn btn-secondary" onClick={handlePrevious} disabled={currentIndex === 0}>Previous</button>
           <div className="right-controls">
             {currentIndex === questions.length - 1 ? (
-              <button className="btn btn-primary" onClick={handleSubmit}>Submit Quiz</button>
+              <button className="btn btn-primary" onClick={handleSubmit} disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit Quiz'}
+              </button>
             ) : (
               <button className="btn btn-primary" onClick={handleNext}>Next</button>
             )}
