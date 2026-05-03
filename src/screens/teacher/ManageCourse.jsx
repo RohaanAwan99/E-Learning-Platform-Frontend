@@ -96,6 +96,7 @@ export default function ManageCourse() {
               {modules.map((item, idx) => {
                 const mod = item.module || item;
                 const hasQuiz = item.quiz != null;
+                const hasLecture = item.lecture != null;
                 return (
                   <div key={mod._id} style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'12px',padding:'1.25rem',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem',flexWrap:'wrap',transition:'background 0.2s'}}>
                     <div style={{display:'flex',alignItems:'center',gap:'1rem',flex:1,minWidth:'200px'}}>
@@ -106,6 +107,13 @@ export default function ManageCourse() {
                       </div>
                     </div>
                     <div style={{display:'flex',gap:'0.75rem',flexWrap:'wrap'}}>
+                      {hasLecture ? (
+                        <a href={`/teacher/courses/${id}/modules/${mod._id}/edit`} style={{fontSize:'0.8rem',color:'#e2e8f0',textDecoration:'none',fontWeight:600,padding:'0.4rem 0.75rem',borderRadius:'6px',border:'1px solid #94a3b8',transition:'all 0.2s'}}>
+                          Edit Lecture
+                        </a>
+                      ) : (
+                        <span style={{fontSize:'0.78rem',color:'var(--text-muted)',alignSelf:'center'}}>No lecture</span>
+                      )}
                       <a href={`/teacher/courses/${id}/modules/${mod._id}/quiz`} style={{fontSize:'0.8rem',color:'var(--accent)',textDecoration:'none',fontWeight:600,padding:'0.4rem 0.75rem',borderRadius:'6px',border:'1px solid var(--accent)',transition:'all 0.2s'}}>
                         {hasQuiz ? 'Edit Quiz' : 'Add Quiz'}
                       </a>
