@@ -49,9 +49,36 @@ const SignupPage = () => {
         <div className="form-wrapper">
           <h2 className="form-title">Sign Up</h2>
           <p className="form-subtitle">Create a new account.</p>
-          <div className="role-toggle">
-            <button className={`role-btn ${role === 'student' ? 'active' : ''}`} onClick={() => setRole('student')}>Student</button>
-            <button className={`role-btn ${role === 'teacher' ? 'active' : ''}`} onClick={() => setRole('teacher')}>Teacher</button>
+          <div className="role-selection">
+            <span className="section-label">I am a</span>
+            <div className="role-cards">
+              <div className={`role-card ${role === 'student' ? 'active' : ''}`} onClick={() => setRole('student')}>
+                <svg className="role-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span>Student</span>
+                {role === 'student' && (
+                  <div className="check-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className={`role-card ${role === 'teacher' ? 'active' : ''}`} onClick={() => setRole('teacher')}>
+                <svg className="role-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span>Teacher</span>
+                {role === 'teacher' && (
+                  <div className="check-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="input-group">

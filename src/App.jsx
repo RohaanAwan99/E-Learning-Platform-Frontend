@@ -23,7 +23,6 @@ import BlogList from './screens/BlogList'
 import BlogDetail from './screens/BlogDetail'
 import AdminDashboard from './screens/admin/AdminDashboard'
 import UserManagement from './screens/admin/UserManagement'
-import CourseStats from './screens/student/CourseStats'
 import CertificateVerify from './screens/CertificateVerify'
 import ContactPage from './screens/ContactPage'
 import NotFoundPage from './screens/NotFoundPage'
@@ -51,7 +50,6 @@ function App() {
       <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['student']}><HomeScreen /></ProtectedRoute>} />
       <Route path="/courses" element={<ProtectedRoute allowedRoles={['student']}><BrowseCourses /></ProtectedRoute>} />
       <Route path="/courses/:id" element={<ProtectedRoute allowedRoles={['student']}><CourseDetail /></ProtectedRoute>} />
-      <Route path="/courses/:id/stats" element={<ProtectedRoute allowedRoles={['student']}><CourseStats /></ProtectedRoute>} />
       <Route path="/courses/:courseId/modules/:moduleId" element={<ProtectedRoute allowedRoles={['student']}><TutorialScreen /></ProtectedRoute>} />
       <Route path="/courses/:courseId/modules/:moduleId/quiz" element={<ProtectedRoute allowedRoles={['student']}><AttemptQuiz /></ProtectedRoute>} />
       <Route path="/certificates" element={<ProtectedRoute allowedRoles={['student']}><MyCertificates /></ProtectedRoute>} />
