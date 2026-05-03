@@ -46,13 +46,24 @@ export default function AddModule() {
     setLoading(false);
   };
 
-  const inputStyle = { width: '100%', padding: '0.7rem 1rem', border: '1px solid #e0e0e0', borderRadius: '10px', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' };
-  const labelStyle = { display: 'block', marginBottom: '0.35rem', fontWeight: 600, fontSize: '0.85rem', color: '#333' };
+  const inputStyle = {
+    width: '100%',
+    padding: '0.7rem 1rem',
+    border: '1px solid var(--input-border)',
+    borderRadius: '10px',
+    fontSize: '0.9rem',
+    outline: 'none',
+    boxSizing: 'border-box',
+    background: 'var(--input-bg)',
+    color: 'var(--text-primary)',
+    fontFamily: 'var(--font-sans)',
+  };
+  const labelStyle = { display: 'block', marginBottom: '0.35rem', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-secondary)' };
 
   return (
     <><Navbar />
       <div style={{ maxWidth: '700px', margin: '2rem auto', padding: '0 2rem' }}>
-        <h1 style={{ fontSize: '1.6rem', color: '#1a1a2e' }}>Add Module</h1>
+        <h1 style={{ fontSize: '1.6rem', color: 'var(--text-heading)' }}>Add Module</h1>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1.5rem' }}>
           <div><label style={labelStyle}>Module Title *</label><input style={inputStyle} value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="e.g. Introduction to Arrays" /></div>
           <div><label style={labelStyle}>Module Order</label><input type="number" min="1" style={inputStyle} value={form.order} onChange={e => setForm({...form, order: parseInt(e.target.value)})} /></div>
