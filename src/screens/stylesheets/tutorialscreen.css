@@ -110,6 +110,220 @@
   letter-spacing: -0.5px;
 }
 
+.lecture-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.lecture-panel {
+  min-width: 0;
+}
+
+.tutor-panel {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+.tutor-card {
+  background: linear-gradient(180deg, #0f172a, #111827);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
+  color: #e2e8f0;
+  overflow: hidden;
+}
+
+.tutor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+}
+
+.tutor-header h3 {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.tutor-eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  opacity: 0.85;
+}
+
+.tutor-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tutor-status.locked {
+  background: rgba(15, 23, 42, 0.35);
+  color: #e2e8f0;
+}
+
+.tutor-body {
+  padding: 1rem 1.25rem 1.25rem;
+  background: #0b1220;
+}
+
+.tutor-locked {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #cbd5f5;
+  line-height: 1.5;
+}
+
+.tutor-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.tutor-empty {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.tutor-message {
+  display: flex;
+}
+
+.tutor-message.user {
+  justify-content: flex-end;
+}
+
+.tutor-message.assistant {
+  justify-content: flex-start;
+}
+
+.tutor-bubble {
+  max-width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+.tutor-message.user .tutor-bubble {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  color: #fff;
+}
+
+.tutor-typing {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.tutor-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.tutor-chip {
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  background: rgba(99, 102, 241, 0.16);
+  color: #c7d2fe;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.tutor-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(99, 102, 241, 0.28);
+}
+
+.tutor-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tutor-input textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 0.7rem 0.8rem;
+  resize: vertical;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  outline: none;
+}
+
+.tutor-input textarea::placeholder {
+  color: rgba(226, 232, 240, 0.6);
+}
+
+.tutor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+
+.tutor-hint {
+  font-size: 0.7rem;
+  color: rgba(226, 232, 240, 0.6);
+}
+
+.tutor-actions button {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tutor-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tutor-error {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+}
+
 /* ── Responsive ─────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .layout {
@@ -139,5 +353,13 @@
 
   .main-content {
     padding: 1.5rem 1.25rem;
+  }
+
+  .lecture-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tutor-panel {
+    position: static;
   }
 }
