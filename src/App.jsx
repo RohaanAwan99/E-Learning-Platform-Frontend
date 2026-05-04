@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import ProtectedRoute from './components/ProtectedRoute'
 import LoginPage from './screens/loginpage'
 import SignupPage from './screens/signuppage'
-import VerifyEmail from './screens/VerifyEmail'
 import HomeScreen from './screens/homescreen'
 import BrowseCourses from './screens/student/BrowseCourses'
 import CourseDetail from './screens/student/CourseDetail'
@@ -44,7 +43,6 @@ function App() {
       <Route path="/" element={getRootRedirect()} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/verify-email/:token" element={<VerifyEmail />} />
       <Route path="/verify/:uuid" element={<CertificateVerify />} />
 
       {/* Student */}

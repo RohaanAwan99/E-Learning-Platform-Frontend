@@ -23,7 +23,7 @@ const SignupPage = () => {
 
     const result = await dispatch(registerUser({ name, email, password, role }));
     if (registerUser.fulfilled.match(result)) {
-      toast.success("Registration successful! Check your email for verification.");
+      toast.success("Registration successful! You can now log in.");
       navigate('/login');
     } else {
       toast.error(result.payload || "Registration failed");
