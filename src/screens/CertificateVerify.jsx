@@ -31,3 +31,4 @@ export default function CertificateVerify() {
     </div>
   );
 }
+

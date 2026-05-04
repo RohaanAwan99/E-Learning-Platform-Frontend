@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses } from '../../store/slices/courseSlice';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import './BrowseCourses.css';
 
 export default function BrowseCourses() {
@@ -73,3 +73,4 @@ export default function BrowseCourses() {
     </>
   );
 }
+

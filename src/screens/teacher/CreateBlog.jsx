@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import API from '../../api/axios';
 import '../stylesheets/lectureContent.css';
 
@@ -61,3 +61,4 @@ export default function CreateBlog() {
     </>
   );
 }
+

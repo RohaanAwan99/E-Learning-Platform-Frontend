@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { logout } from "../store/slices/authSlice";
 import { fetchNotifications, markAsRead, markAllAsRead } from "../store/slices/notificationSlice";
 import ThemeToggle from "./ThemeToggle";
-import "./Navbar.css";
+import "./navbar.css";
 
 const BellIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

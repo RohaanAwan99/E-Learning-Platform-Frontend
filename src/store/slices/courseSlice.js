@@ -74,3 +74,4 @@ const courseSlice = createSlice({
 
 export const { clearCourseError, clearCurrentCourse } = courseSlice.actions;
 export default courseSlice.reducer;
+

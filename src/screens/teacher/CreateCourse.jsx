@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import API from '../../api/axios';
 
 export default function CreateCourse() {
@@ -44,3 +44,4 @@ export default function CreateCourse() {
     </>
   );
 }
+

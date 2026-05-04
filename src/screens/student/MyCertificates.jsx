@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import API from '../../api/axios';
 import './MyCertificates.css';
 
@@ -42,3 +42,4 @@ export default function MyCertificates() {
     </>
   );
 }
+

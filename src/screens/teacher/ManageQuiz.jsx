@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import API from '../../api/axios';
 
 export default function ManageQuiz() {
@@ -225,3 +225,4 @@ export default function ManageQuiz() {
     </>
   );
 }
+

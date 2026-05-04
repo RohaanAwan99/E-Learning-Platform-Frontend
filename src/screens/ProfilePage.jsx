@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar';
 import API from '../api/axios';
 
 export default function ProfilePage() {
@@ -170,3 +170,4 @@ export default function ProfilePage() {
     </>
   );
 }
+

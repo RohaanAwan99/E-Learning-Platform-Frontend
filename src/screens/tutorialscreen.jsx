@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar';
 import API from '../api/axios';
 import './stylesheets/tutorialscreen.css';
 import './stylesheets/lectureContent.css';
@@ -315,3 +315,4 @@ export default function TutorialScreen() {
     </div>
   );
 }
+

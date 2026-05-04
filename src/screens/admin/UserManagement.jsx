@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/navbar';
 import API from '../../api/axios';
 
 export default function UserManagement() {
@@ -73,3 +73,4 @@ export default function UserManagement() {
     </>
   );
 }
+
