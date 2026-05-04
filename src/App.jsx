@@ -16,6 +16,7 @@ import TeacherDashboard from './screens/teacher/TeacherDashboard'
 import CreateCourse from './screens/teacher/CreateCourse'
 import ManageCourse from './screens/teacher/ManageCourse'
 import AddModule from './screens/teacher/AddModule'
+import EditModule from './screens/teacher/EditModule'
 import ManageQuiz from './screens/teacher/ManageQuiz'
 import CreateBlog from './screens/teacher/CreateBlog'
 import TeacherStudents from './screens/teacher/TeacherStudents'
@@ -59,6 +60,7 @@ function App() {
       <Route path="/teacher/courses/new" element={<ProtectedRoute allowedRoles={['teacher']}><CreateCourse /></ProtectedRoute>} />
       <Route path="/teacher/courses/:id" element={<ProtectedRoute allowedRoles={['teacher']}><ManageCourse /></ProtectedRoute>} />
       <Route path="/teacher/courses/:id/modules/new" element={<ProtectedRoute allowedRoles={['teacher']}><AddModule /></ProtectedRoute>} />
+      <Route path="/teacher/courses/:courseId/modules/:moduleId/edit" element={<ProtectedRoute allowedRoles={['teacher']}><EditModule /></ProtectedRoute>} />
       <Route path="/teacher/courses/:courseId/modules/:moduleId/quiz" element={<ProtectedRoute allowedRoles={['teacher']}><ManageQuiz /></ProtectedRoute>} />
       <Route path="/teacher/blogs/new" element={<ProtectedRoute allowedRoles={['teacher']}><CreateBlog /></ProtectedRoute>} />
       <Route path="/teacher/students" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherStudents /></ProtectedRoute>} />

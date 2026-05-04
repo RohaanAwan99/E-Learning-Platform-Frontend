@@ -11,8 +11,10 @@ export default function AdminDashboard() {
   const [registrations, setRegistrations] = useState([]);
   const [topCourses, setTopCourses] = useState([]);
   const [passRates, setPassRates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       API.get('/admin/analytics/overview'),
       API.get('/admin/analytics/registrations?period=daily'),
@@ -23,7 +25,7 @@ export default function AdminDashboard() {
       setRegistrations(r.data.data);
       setTopCourses(t.data.data);
       setPassRates(p.data.data);
-    }).catch(console.error);
+    }).catch(console.error).finally(() => setLoading(false));
   }, []);
 
   const statCards = overview ? [
@@ -41,6 +43,9 @@ export default function AdminDashboard() {
           <div><h1 style={{fontSize:'1.8rem',color:'var(--text-heading)',margin:0}}>Admin Dashboard</h1><p style={{color:'var(--text-muted)',margin:'0.25rem 0 0'}}>Platform analytics & insights</p></div>
           <Link to="/admin/users" style={{background:'var(--accent)',color:'#fff',padding:'0.6rem 1.5rem',borderRadius:'8px',textDecoration:'none',fontWeight:600}}>Manage Users</Link>
         </div>
+        {loading && (
+          <div style={{padding:'2rem',textAlign:'center',color:'var(--text-muted)'}}>Loading analytics...</div>
+        )}
         {/* Stats */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'1rem',marginBottom:'2rem'}}>
           {statCards.map(s => (
